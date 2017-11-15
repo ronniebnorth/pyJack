@@ -9,6 +9,7 @@ class Game:
         self.players = self.createPlayers(numPlayers)
         self.numDecks = numDecks
         self.deck = Deck(numDecks)
+        self.dealerUpcard = 0
         self.scoreboard = Scoreboard()
 
     def createPlayers(self, numPlayers):
@@ -27,7 +28,10 @@ class Game:
             
         for i in range(2):
             for player in self.players:
-                player.addPoints(self.deck.getCard())
+                card = self.deck.getCard()
+                if(i == 1 and player.type == "dealer"):
+                    self.dealerUpcard = card
+                player.addPoints(card)
                 
     def score(self):
         dealerPoints = getDealerPoints(self.players)
@@ -64,7 +68,7 @@ class Game:
             player.reset()
             
     def processPlayers(self):
-        upcard = getUpcard(self.players)
+        upcard = self.dealerUpcard
         for player in self.players:
             move = 'xxx'
             while move:

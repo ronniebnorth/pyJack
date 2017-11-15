@@ -8,32 +8,37 @@ class Player:
         self.id = Player.playerCount
         self.type = type
         self.points = 0
-        self.upcard = 0
         self.aces = 0
         self.blackjack = False
         self.canSplit = False
         self.doubled = False
 
     def addPoints(self, points):
-        print("adding points " + str(points))
-        
-        if(self.points != 0 and self.type == 'dealer'):
-            self.upcard = points
+        print("adding points to " + self.type + "  " + str(points))
+
         if(points == self.points):
             self.canSplit = True
+            
         if(points == 11):
             self.aces += 1
+            
         self.points += points
-        if(self.points > 21):
-            self.points = 12
+        
+        if(self.points > 21 and self.aces > 1):
+            self.points -= 10
             self.aces -= 1
     
     def setPoints(self, points):
         self.points = points
         
     def getMove(self, upcard):
+        
+        if(self.points > 21):
+            return False
+        
         if(self.doubled):
             return False
+        
         if(self.type == "dealer"):
             if(self.points < 17):
                 return 'HIT'
@@ -46,10 +51,12 @@ class Player:
         strat = getHardStrat(self.points-1, upcard-1)
         print("strat = " + str(strat) + "  points = " + str(self.points) + "  upcard = " + str(upcard))
         
-        if(strat == '0' or strat == '3'):
-            return 'HITs'
+        if(strat == 0 or strat == 3):
+            print("hitting")
+            return 'HIT'
         else:
             return False
+        
     
     def reset(self):
         self.points = 0
@@ -61,10 +68,7 @@ class Player:
         
     def getCount(self):
         return Player.playerCount
-    
-    def getUpcard(self):
-        return self.upcard
-    
+        
     def getType(self):
         return self.type
     
