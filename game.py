@@ -1,7 +1,6 @@
 from player import Player
 from deck import Deck
 from scoreboard import Scoreboard
-from util import *
 
 class Game:
     
@@ -31,13 +30,18 @@ class Game:
                 card = self.deck.getCard()
                 if(i == 1 and player.type == "dealer"):
                     self.dealerUpcard = card
+                if(player.getPoints() == card):
+                    player.setCanSplit(True)
                 player.addPoints(card)
+                if(player.getPoints() == 21):
+                    player.setBlackjack(True)
+                    print("has blackjack")
                 
-    def score(self):
-        dealerPoints = getDealerPoints(self.players)
-        dealerBlackjack = getDealerBlackjack(self.players)
+    def scorePlayers(self):
+        dealerPoints = self.getDealerPoints(self.players)
+        dealerBlackjack = self.getDealerBlackjack(self.players)
         
-        for player in getPlayers(self.players):
+        for player in self.getPlayers(self.players):
             score = 1
             if(player.hasBlackjack):
                 score = 1.5
@@ -76,4 +80,29 @@ class Game:
                 if(move == "HIT" or move == "DOUBLE"):
                     player.addPoints(self.deck.getCard())
                 
-    
+    def getDealer(self, players):
+        for player in players:
+            if(player.getType() == 'dealer'):
+                return player
+
+    def getPlayers(self, players):
+        newPlayers = []
+        for player in players:
+            if(player.getType() != 'dealer'):
+                newPlayers.append(player)
+        return newPlayers
+
+    def getDealerPoints(self, players):
+        for player in players:
+            if(player.getType() == 'dealer'):
+                return player.getPoints()
+
+    def getDealerBlackjack(self, players):
+        for player in players:
+            if(player.getType() == 'dealer'):
+                return player.hasBlackjack()
+            
+    def getUpcard(self, players):
+        for player in players:
+            if(player.getType() == 'dealer'):
+                return player.getUpcard()    

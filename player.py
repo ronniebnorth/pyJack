@@ -1,5 +1,3 @@
-from util import *
-
 class Player:
     playerCount = 0
     
@@ -15,9 +13,6 @@ class Player:
 
     def addPoints(self, points):
         print("adding points to " + self.type + "  " + str(points))
-
-        if(points == self.points):
-            self.canSplit = True
             
         if(points == 11):
             self.aces += 1
@@ -47,8 +42,15 @@ class Player:
         
         if(upcard == 11):
             upcard = 1
+         
+        rw = self.points
+        strat = 0
+        if(self.aces > 0):
+            rw -= 10
+            strat = self.getSoftStrat(rw-1, upcard-1)
+        else:
+            strat = self.getHardStrat(rw-1, upcard-1)
             
-        strat = getHardStrat(self.points-1, upcard-1)
         print("strat = " + str(strat) + "  points = " + str(self.points) + "  upcard = " + str(upcard))
         
         if(strat == 0 or strat == 3):
@@ -95,4 +97,55 @@ class Player:
         
     def removeAce(self):
         self.aces -= 1
- 
+        
+    def getHardStrat(self, points, upcard):
+        hardStrat = [
+            [9,9,9,9,9,9,9,9,9,9],
+            [9,9,9,9,9,9,9,9,9,9],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,3,3,3,3,0,0,0,0],
+            [0,3,3,3,3,3,3,3,3,0],
+            [0,3,3,3,3,3,3,3,3,3],
+            [0,0,0,1,1,1,0,0,0,0],
+            [0,1,1,1,1,1,0,0,0,0],
+            [0,1,1,1,1,1,0,0,0,0],
+            [0,1,1,1,1,1,0,0,0,0],
+            [0,1,1,1,1,1,0,0,0,0],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1]    
+        ]
+        return hardStrat[points][upcard]
+
+    def getSoftStrat(self, points, upcard):
+        softStrat = [
+            [9,9,9,9,9,9,9,9,9,9],
+            [0,0,0,0,0,3,0,0,0,0],
+            [0,0,0,0,3,3,0,0,0,0],
+            [0,0,0,0,3,3,0,0,0,0],
+            [0,0,0,3,3,3,0,0,0,0],
+            [0,0,0,3,3,3,0,0,0,0],
+            [0,0,3,3,3,3,0,0,0,0],
+            [0,1,3,3,3,3,1,1,0,0],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [9,9,9,9,9,9,9,9,9,9],
+            [9,9,9,9,9,9,9,9,9,9],
+            [9,9,9,9,9,9,9,9,9,9],
+            [9,9,9,9,9,9,9,9,9,9],
+            [9,9,9,9,9,9,9,9,9,9],
+            [9,9,9,9,9,9,9,9,9,9],
+            [9,9,9,9,9,9,9,9,9,9],
+            [9,9,9,9,9,9,9,9,9,9],
+            [9,9,9,9,9,9,9,9,9,9],
+            [0,0,0,0,0,0,0,0,0,0]
+        ]
+        return softStrat[points][upcard]
